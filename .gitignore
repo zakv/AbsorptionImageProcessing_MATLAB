@@ -1,0 +1,32 @@
+# Custom ignores
+
+# Don't add sample data to git #
+################################
+Sample_Data/
+2017*/
+2018*/
+2019*/
+2020*/
+2021*/
+
+# Linux generated files #
+#########################
+*.fuse*
+
+# Compiled Mex Files #
+######################
+*.mexa64
+
+# Tilde Backups #
+#################
+*~
+
+# Data Files #
+##############
+*.mat
+*.ascii
+*.zip
+
+# Random Files Matlab makes #
+#############################
+*.asv
