@@ -215,6 +215,7 @@ end
 end
 
 
+
 function [ mean_image ] = get_mean_image( file_list )
 %Averages the data in the images from file_list and returns it as a 2D array
 %   file_list should be a linear cell array with a filename in each cell.
@@ -229,90 +230,6 @@ mean_image=mean(images_array,2); %average the different images
 mean_image=reshape(mean_image,image_size); %return the image to its 2D form
 end
 
-
-
-% function [ basis ] = make_basis1( file_list, max_vectors, show_progress )
-% %Given a list of filenames opens the files and forms a basis from the data
-% %   file_list should be a linear cell array with a filename in each cell.
-% %   It is best to get file_list from get_file_list()
-% %
-% %   max_vectors is the maximum number of basis vectors to use and is an
-% %   optional argument.  Less may be used if file_list has less files.
-% %
-% %   show_progress is optional and should be true or false.  If true, a
-% %   window will pop up displaying the progress of the basis creation. This
-% %   defaults to false
-% %
-% %   Each row in file_list should be a file name.  This list can be gotten
-% %   from get_file_list()
-% %
-% %   This function simply uses Matlab's orth() function to make the bases
-% %   orthonormal in the usual sense.
-% %   The output basis is a matrix where each column is a basis image. An
-% %   image P is flattened into a column vector by writing P(:).  Any column
-% %   can be returned to it's original matrix form using Matlab's reshape()
-% %   function
-% 
-% %Call get_images_array() with the proper number of arguments
-% if nargin==1
-%     images_array=get_images_array(file_list);
-%     max_vectors=Inf;
-% elseif nargin==2
-%     images_array=get_images_array(file_list);
-% elseif nargin==3
-%     images_array=get_images_array(file_list,show_progress);
-% end
-% 
-% %Take basis and make it orthogonal
-% basis=orth(images_array);
-% 
-% %Trim off the later vectors if necessary
-% n_vectors=size(basis,2);
-% if max_vectors<n_vectors
-%     basis=basis(:,1:max_vectors);
-% end
-% end
-% 
-% 
-% 
-% function [ residual, projection ] = get_residual1( image_in, basis, atom_region )
-% %Removes the projection of image_in onto basis
-% %   image_in should be an array containing the pixel counts
-% %
-% %   basis should be a basis array made by make_basis()
-% %
-% %   atom_region is an optional argument that can be used to specify a
-% %   region of the image to disregard when constructing the background
-% %   image.  It should be specified as [row_min,row_max,col_min,col_max]
-% %   where each min and max refer to the start and end indices of the
-% %   region.
-% %
-% %   residual is the image with the background removed
-% %
-% %   projection is the constructed background image that was used
-% %
-% %
-% %   Note that setting the atom_region to zero decreases all of the inner products
-% %   which messes things up.  This may not be a big problem for small atom regions
-% %   but it shouldn't be too hard to come up with a better algorithm
-% 
-% %Do projection and subtract the pojection from the image
-% original_shape=size(image_in);
-% used_region=image_in;
-% if nargin==3
-%     %Set atom region to zero to ignore it when doing projection
-%     row_min=atom_region(1);
-%     row_max=atom_region(2);
-%     col_min=atom_region(3);
-%     col_max=atom_region(4);
-%     used_region(row_min:row_max,col_min:col_max)=0;
-% end
-% used_region=used_region(:);
-% projection=basis*(transpose(basis)*used_region); %Parentheses make evaulation ~1000 times faster
-% residual=image_in(:)-projection;
-% projection=reshape(projection,original_shape);
-% residual=reshape(residual,original_shape);
-% end
 
 
 function [ back_region ] = make_back_region( image_in, row_min, row_max, col_min ,col_max)
