@@ -30,3 +30,9 @@ Sample_Data/
 # Random Files Matlab makes #
 #############################
 *.asv
+
+# Specific things for this Repository #
+#######################################
+Papers
+main_2.m
+*.nb
