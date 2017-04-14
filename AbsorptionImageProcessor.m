@@ -4,6 +4,31 @@ classdef AbsorptionImageProcessor
 %   TODO: add basic instructions here
     
 methods(Static)
+    function import_functions()
+        %Imports the functions defined in this class into the caller's
+        %namespace
+        %   This allows the functions to be called directly rather than via
+        %   the dot notation.  In other words, entering
+        %   'AbsorptionImageProcessor.import_functions() at the command
+        %   line allows users to write 'plot_image(...)' instead of the
+        %   lengthier 'AbsorptionImageProcessor.plot_image(...)'
+        %
+        %   A convenient alternative to using this function would be to
+        %   enter 'aip=AbsorptionImageProcessor' at the command line, then
+        %   functions can be called like so 'aip.plot_image(...)'
+        
+        %First get the names of all of the methods in this class file
+        methods_list=methods(AbsorptionImageProcessor);
+        for k=1:length(methods_list)
+            method_name=methods_list{k};
+            %Now that we have the names let's make function handles
+            func=str2func(['AbsorptionImageProcessor.',method_name]);
+            %Now let's put those function handles in the caller's namespace
+            assignin('base',method_name,func);
+        end
+    end
+
+
 function [ file_list ] = get_file_list( ls_pattern )
 %Takes a file name pattern with wildcards and returns a list of file names
 %   This function used to have separate code for windows and unix systems that made the
