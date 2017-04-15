@@ -8,11 +8,12 @@ function [ residual, projection ] = get_residual_eig( image_in, basis, mean_back
 %   back_region is zero).  This is analogous to <\Gamma> mentioned in the
 %   paper below.
 %
-%   back_region should be a 2d array with 1's in the pixels that should be
-%   considered as background and used, and 0's in the pixels that should be
-%   ignored (e.g. if there are atoms there).  The easiest way to make this
-%   matrix is to use make_back_region().  This is an optional argument.  If
-%   it is not provided, the entire image will be used.
+%   back_region should the same back_region that was given to
+%   make_basis_eig() in order to generate the basis.  It should be a 2D
+%   array with 1's in the pixels that should be considered as background
+%   and used, and 0's in the pixels that should be ignored (e.g. if there
+%   are atoms there).  The easiest way to make this matrix is to use
+%   make_back_region().
 %
 %   residual is the image with the background removed
 %
@@ -60,10 +61,6 @@ image_in=image_in-mean_back;
 % residual=image_in(:)-projection;
 
 %Same projection as in get_residual_cheng()
-if nargin<3
-    [n_rows, n_cols] = size(image_in);
-    back_region=ones(n_rows,n_cols);
-end
 used_region=back_region.*image_in;
 used_region=used_region(:);
 projection=basis*(transpose(basis)*used_region);

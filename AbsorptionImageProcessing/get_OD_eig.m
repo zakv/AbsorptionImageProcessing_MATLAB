@@ -8,12 +8,12 @@ function [ OD ] = get_OD_eig( image_in, basis, mean_back, back_region )
 %   back_region is zero).  This is analogous to <\Gamma> mentioned in the
 %   paper.
 %
-%   back_region should be a 2d array with 1's in the pixels that should be
-%   considered as background and used, and 0's in the pixels that should be
-%   ignored (e.g. if there are atoms there).  The easiest way to make this
-%   matrix is to use make_back_region().  This is an optional argument.  If
-%   it is not provided, the entire image will be used.
-%
+%   back_region should the same back_region that was given to
+%   make_basis_eig() in order to generate the basis.  It should be a 2D
+%   array with 1's in the pixels that should be considered as background
+%   and used, and 0's in the pixels that should be ignored (e.g. if there
+%   are atoms there).  The easiest way to make this matrix is to use
+%   make_back_region().
 %
 %   Note that this function properly accounts for the effects of ignoring the
 %   regions with atoms as long as the basis used was constructed with make_basis_eig()
@@ -23,11 +23,8 @@ function [ OD ] = get_OD_eig( image_in, basis, mean_back, back_region )
 %   in "Reduction of interference fringes in absorption imaging of cold atom
 %   cloud using eigenface method" by Li et. al.
 
-%Let get_residual_eig() determine default back_region
-if nargin<4
-    [~,projection] = get_residual_eig(image_in,basis,mean_back);
-else
-    [~,projection] = get_residual_eig(image_in,basis,mean_back,back_region);
-end
+%Get the re-construced background and take the log of the image ratios to
+%get the optical depth
+[~,projection] = get_residual_eig(image_in,basis,mean_back,back_region);
 OD=-log(image_in./projection);
 end

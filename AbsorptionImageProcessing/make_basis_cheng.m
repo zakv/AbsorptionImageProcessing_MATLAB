@@ -5,8 +5,9 @@ function [ basis ] = make_basis_cheng( file_list, back_region, max_vectors, show
 %   back_region should be a 2d array with 1's in the pixels that should be
 %   considered as background and used, and 0's in the pixels that should be
 %   ignored (e.g. if there are atoms there).  The easiest way to make this
-%   matrix is to use make_back_region().  This is an optional argument.  If
-%   it is not provided, the entire image will be used.
+%   matrix is to use make_back_region().  Alternatively one can use
+%   back_region=ones( size(image_in) ) to use the full image, where
+%   image_in is an image of the appropriate size.
 %
 %   max_vectors is the maximum number of basis vectors to use and is an
 %   optional argument.  Less may be used if file_list has less files.
@@ -32,14 +33,7 @@ function [ basis ] = make_basis_cheng( file_list, back_region, max_vectors, show
 %Call get_images_array() with the proper number of arguments
 %This gives us the data in the files as a matrix with each column containing
 %the data from one image
-if nargin==1
-    images_array=get_images_array(file_list);
-    %make default back_region.  Note that we're just going to make it
-    %a column vector, so we don't need to worry about making it a 2D array
-    %that's the same size as the images
-    back_region=ones( size(images_array,1),1 );
-    max_vectors=Inf;
-elseif nargin==2
+if nargin<3
     images_array=get_images_array(file_list);
     max_vectors=Inf;
 elseif nargin==3
