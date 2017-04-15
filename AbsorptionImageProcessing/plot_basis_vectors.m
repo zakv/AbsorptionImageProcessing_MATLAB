@@ -14,7 +14,7 @@ function plot_basis_vectors( basis, indices, image_size)
 
 %Set default image size
 if nargin<3
-    image_size=121;
+    image_size=[121,121];
 end
 
 %Now plot the basis vectors
