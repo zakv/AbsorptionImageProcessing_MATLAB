@@ -1,4 +1,50 @@
-function image = load_image(filename, startRow, endRow)
+function image = load_image(filename, clear_cache)
+%Loads data from the csv ascii files produced by our camera software
+%   
+%   filename should be the name of the file with extension.  A relative or
+%   absolute path may also be included in filename.
+%   
+%   clear_cache tells the function whether or not to clear data from the
+%   hard drive read cache.  By default this is false. Results from reading
+%   the hard drive are cached for speed.  Call this function with
+%   clear_cache=true to clear the cache.  This is necessary if, for
+%   example, data on the hard drive is changed and the new file should be
+%   read in.
+%
+%   Example Usage:
+%   >> image = load_image( fullfile('20170412','Savefile_45_back.ascii') ); %load an image
+%   >> %clear cache (will error since no filename is provided, but cache
+%   >> %will still be cleared)
+%   >> image = load_image( '', true ); 
+
+%Create persistent variable for storing memoized function
+persistent cached_reader;
+
+%If this is the first call, create the memoized function object
+if isempty(cached_reader) 
+    cached_reader=memoize(@read_image_from_drive); %Function defined below
+    cached_reader.CacheSize = 6000; %Default number of results to cache
+end
+
+%Clear the cache if instructed
+if nargin<2
+    clear_cache=false;
+end
+if clear_cache
+    %Clear the memoization cache
+    cached_reader.clearCache;
+end
+
+%Get the image data, using the cache if possible
+image=cached_reader(filename);
+
+%Uncomment the following line and comment the above code to ditch the
+%memoizing stuff and just read from the hard drive
+% image=read_image_from_drive(filename);
+
+end
+
+function image = read_image_from_drive(filename)
 %Loads data from the csv ascii files produced by our camera software
 %   image = load_image(FILENAME) Reads data from text file
 %   FILENAME for the default selection.
