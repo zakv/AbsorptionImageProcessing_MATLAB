@@ -9,7 +9,13 @@ function image = load_image(filename, clear_cache)
 %   the hard drive are cached for speed.  Call this function with
 %   clear_cache=true to clear the cache.  This is necessary if, for
 %   example, data on the hard drive is changed and the new file should be
-%   read in.
+%   read in.  Also, once the cache if full, no more files are added to the
+%   cache (currently we don't delete old cache entries to add new ones).
+%   If you'd like to add new files to the cache but it is full, you must
+%   clear it.  Caching of the inputs is done by treating it as a raw
+%   string, so if two different paths to the same file are specified in two
+%   different calls, the function will cache the result twice, once for
+%   each given input string.
 %
 %   Example Usage:
 %   >> image = load_image( fullfile('20170412','Savefile_45_back.ascii') ); %load an image
@@ -19,11 +25,11 @@ function image = load_image(filename, clear_cache)
 
 %Create persistent variable for storing memoized function
 persistent cached_reader;
+max_cache_size=10000; %Maximum number of files to cache
 
 %If this is the first call, create the memoized function object
 if isempty(cached_reader) 
-    cached_reader=memoize(@read_image_from_drive); %Function defined below
-    cached_reader.CacheSize = 6000; %Default number of results to cache
+    cached_reader=containers.Map;
 end
 
 %Clear the cache if instructed
@@ -32,11 +38,21 @@ if nargin<2
 end
 if clear_cache
     %Clear the memoization cache
-    cached_reader.clearCache;
+    cached_reader=containers.Map;
+    remove(cached_reader, keys(cached_reader) );
 end
 
 %Get the image data, using the cache if possible
-image=cached_reader(filename);
+if isKey(cached_reader,filename)
+    %We have a cached result, so we'll return it
+    image=cached_reader(filename);
+else
+    image=read_image_from_drive(filename);
+    %add to cache if there's room
+    if length(cached_reader)<max_cache_size
+        cached_reader(filename)=image;
+    end
+end
 
 %Uncomment the following line and comment the above code to ditch the
 %memoizing stuff and just read from the hard drive
