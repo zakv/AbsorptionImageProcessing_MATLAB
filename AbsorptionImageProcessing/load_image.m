@@ -8,8 +8,8 @@ function image = load_image(filename, clear_cache)
 %   hard drive read cache.  By default this is false. Results from reading
 %   the hard drive are cached for speed.  Call this function with
 %   clear_cache=true to clear the cache.  This is necessary if, for
-%   example, data on the hard drive is changed and the new file should be
-%   read in.  Also, once the cache if full, no more files are added to the
+%   example, data on the hard drive has changed and the new file should be
+%   read in.  Also, once the cache is full, no more files are added to the
 %   cache (currently we don't delete old cache entries to add new ones).
 %   If you'd like to add new files to the cache but it is full, you must
 %   clear it.  Caching of the inputs is done by treating it as a raw
