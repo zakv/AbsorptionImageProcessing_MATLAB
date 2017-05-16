@@ -1,4 +1,4 @@
-function [ basis ] = make_basis_cheng( file_list, back_region, max_vectors, show_progress )
+function [ basis ] = make_basis_svd( file_list, back_region, max_vectors, show_progress )
 %Given a list of filenames opens the files and forms a basis from the data
 %   file_list should be a cell array of file names
 %
