@@ -112,58 +112,25 @@ elseif nargin==4
     images_array=get_images_array(file_list,show_progress);
 end
 
-% n_vectors=size(images_array,2);
-% %Set atom region to zero by multiplying each column with back_region
-% back_region=back_region(:); %make into column vector
-% images_array_masked=zeros(size(images_array)); %preallocate
-% for k=1:n_vectors
-%     images_array_masked(:,k)=back_region.*images_array(:,k);
-% end
-% 
-% %Figure out mean face (analog of the mean <\Gamma> in the paper)
-% A=zeros(size(images_array_masked)); %preallocate
-% mean_back=mean(images_array_masked,2);
-% for k=1:n_vectors
-%     A(:,k)=images_array_masked(:,k)-mean_back;
-% end
-
 %Build the A matrix from the paper (but with the atom region masked)
 n_vectors=size(images_array,2);
 back_region=back_region(:); %make into column vector
 A=zeros(size(images_array)); %preallocate
 mean_back=mean(images_array,2);
-% mean_back_masked=back_region.*mean_back;
 for k=1:n_vectors
     A(:,k)=back_region.*(images_array(:,k)-mean_back);
 end
 
 %This is the clever, numerically-efficient step of eigenfaces
 
-% [V,D]=eig(A'*A); %V is matrix with eigenvectors as columns, D is diagonal with eigenvalues
-% %These are not necessarily sorted from largest to smallest eigenvalue, let's do that
-% [eigenvalues,ind]=sort(abs(diag(D)),'descend'); %ind gives us the indices of the eigenvalues large->small
-% V=V(:,ind); %Now V is sorted with the eigenvectors of decreasing eigenvalues.
-% U=A*V; %The columns of U are the eigenfaces, except with the masked sections set to zero.
-% if max_vectors<n_vectors %We may as well trim down our basis now
-%     U=U(:,1:max_vectors);
-% end
-
 %This gives the eigenvectors with the largest values
-%However they are ordered with the largest eigenvalues to the right, so we'll flip things around
-%for consistency with the previous work
 n_eigs=min(n_vectors,max_vectors); %eigs() complains if n_eigs>n_vectors
 [V,D]=eigs(A'*A,n_eigs,'lm');
-% eigenvalues=fliplr(diag(D)); %D is diagonal with eigenvalues. fliplr reverses order
-% V=fliplr(V);
 %These are not necessarily sorted from largest to smallest eigenvalue, let's do that
 eigenvalues=diag(D);
 [~,ind]=sort(abs(eigenvalues),'descend'); %ind gives us the indices of the eigenvalues large->small
 eigenvalues=eigenvalues(ind); %Now eigenvalues are sorted by magnitude
 V=V(:,ind); %Now V is sorted with the eigenvectors of decreasing eigenvalues.
-% U=A*V; %The columns of U are the eigenfaces, except with the masked sections set to zero.
-% if max_vectors<n_vectors %We may as well trim down our basis now
-%     U=U(:,1:max_vectors);
-% end
 
 %The eigenfaces U_i are superpositions of Phi_i as can be seen by
 % the relation U_i = A*V_i = [Phi_1,...Phi_M]*V_i = Phi_1*V_i1 +...+ Phi_M*V_iM
