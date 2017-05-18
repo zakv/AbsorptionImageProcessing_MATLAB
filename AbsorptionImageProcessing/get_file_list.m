@@ -1,10 +1,22 @@
 function [ file_list ] = get_file_list( ls_pattern )
 %Takes a file name pattern with wildcards and returns a list of file names
-%   This function used to have separate code for windows and unix systems that made the
-%   unix version try to imitate the behavior of "ls" on windows.  Now both use dir instead
+%   === Inputs ===
+%   ls_pattern should be a pattern that could be passed to the ls function.
+%   It can (and usually should) include the "*" wildcard to match multiple
+%   files.
 %
-%   file_list should be a linear cell array with a filename in each cell.
-%   It is best to get file_list from get_file_list()
+%   === Outputs ===
+%   file_list is a linear cell array (a cloumn vector) with a filename in
+%   each cell.
+%
+%   === Notes ===
+%   This function used to have separate code for windows and unix systems
+%   that made the unix version try to imitate the behavior of "ls" on
+%   windows.  Now both use dir instead
+%
+%   === Example Usage ===
+%   >> ls_pattern = fullfile('20170405','Savefile_4*_back.ascii');
+%   >> file_list = get_file_list(ls_pattern);
 
 % The "ls" function works differently on linux vs windows so we have separate code for each
 % if ispc()

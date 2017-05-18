@@ -1,20 +1,28 @@
 function [ images_array, image_size ] = get_images_array( file_list, show_progress )
-%Given a list of filenames opens the files and turns each into a column of images_array
+%Given a list of filenames opens the files and turns each into a column of
+%images_array
+%   === Inputs ===
 %   file_list should be a linear cell array with a filename in each cell.
 %   It is best to get file_list from get_file_list()
 %
-%   show_progress is optional and should be true or false.  If true, a
-%   window will pop up displaying the progress of the basis creation. This
-%   defaults to false
+%   show_progress (optional) should be true or false.  If true, a window
+%   will pop up displaying the progress of the basis creation. This
+%   defaults to false.
 %
-%   images_array is a matrix where each column is a basis image. It is
-%   NOT orthogonal or even normalized.  An image P is flattened into a column
-%   vector by writing P(:).  Any column can be returned to it's original matrix
-%   form using Matlab's reshape() function.
+%   === Outputs ===
+%   images_array is a matrix where each column is a basis image. It is NOT
+%   orthogonal or even normalized.  An image P is flattened into a column
+%   vector by writing P(:).  Any column can be returned to it's original
+%   matrix form using Matlab's reshape() function.
 %
-%   image_size is a vector giving the dimensions of the 2D images.  It is equivalent
-%   to the output of size(image_in) where image_in is one of the images in its inital 2D
-%   form.
+%   image_size is a vector giving the dimensions of the 2D images.  It is
+%   equivalent to the output of size(image_in) where image_in is one of the
+%   images in its inital 2D form.
+%
+%   === Example Usage ===
+%   >> ls_pattern = fullfile('20170405','Savefile_4*_back.ascii');
+%   >> file_list = get_file_list(ls_pattern);
+%   >> images_array = get_images_array(file_list);
 
 if nargin<2
     show_progress=false; %default show_progress to be false

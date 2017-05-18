@@ -1,27 +1,31 @@
-function image = load_image(filename, clear_cache)
+function image_out = load_image(filename, clear_cache)
 %Loads data from the csv ascii files produced by our camera software
-%   
+%   === Inputs ===
 %   filename should be the name of the file with extension.  A relative or
 %   absolute path may also be included in filename.
 %   
-%   clear_cache tells the function whether or not to clear data from the
-%   hard drive read cache.  By default this is false. Results from reading
-%   the hard drive are cached for speed.  Call this function with
-%   clear_cache=true to clear the cache.  This is necessary if, for
-%   example, data on the hard drive has changed and the new file should be
-%   read in.  Also, once the cache is full, no more files are added to the
-%   cache (currently we don't delete old cache entries to add new ones).
-%   If you'd like to add new files to the cache but it is full, you must
-%   clear it.  Caching of the inputs is done by treating it as a raw
-%   string, so if two different paths to the same file are specified in two
-%   different calls, the function will cache the result twice, once for
+%   clear_cache (optional) tells the function whether or not to clear data
+%   from the hard drive read cache.  By default this is false.
+%
+%   === Notes ===
+%   Results from reading the hard drive are cached for speed.  Call this
+%   function with clear_cache=true to clear the cache.  This is necessary
+%   if, for example, data on the hard drive has changed and the new file
+%   should be read in.  Also, once the cache is full, no more files are
+%   added to the cache (currently we don't delete old cache entries to add
+%   new ones). If you'd like to add new files to the cache but it is full,
+%   you must clear it.  Caching of the inputs is done by treating it as a
+%   raw string, so if two different paths to the same file are specified in
+%   two different calls, the function will cache the result twice, once for
 %   each given input string.
 %
-%   Example Usage:
-%   >> image = load_image( fullfile('20170412','Savefile_45_back.ascii') ); %load an image
-%   >> %clear cache (will error since no filename is provided, but cache
-%   >> %will still be cleared)
-%   >> image = load_image( '', true ); 
+%   === Example Usage ===
+%   >> filename = fullfile('20170412','Savefile_45_back.ascii');
+%   >> image_out = load_image(filename); %load an image
+%   >> plot_image(image_out,'Test of load_image()');
+%   >> %To clear the cache, run the following line (will error since a  
+%   >> %nonexsistent file name is provided, but the cache will still be cleared)
+%   >> image = load_image('', true); 
 
 %Create persistent variable for storing memoized function
 persistent cached_reader;
@@ -45,12 +49,12 @@ end
 %Get the image data, using the cache if possible
 if isKey(cached_reader,filename)
     %We have a cached result, so we'll return it
-    image=cached_reader(filename);
+    image_out=cached_reader(filename);
 else
-    image=read_image_from_drive(filename);
+    image_out=read_image_from_drive(filename);
     %add to cache if there's room
     if length(cached_reader)<max_cache_size
-        cached_reader(filename)=image;
+        cached_reader(filename)=image_out;
     end
 end
 
