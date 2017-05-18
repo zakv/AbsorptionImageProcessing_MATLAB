@@ -59,36 +59,9 @@ function [ residual, projection ] = get_residual_eig( image_in, basis, mean_back
 %   >> plot_image(projection,'Eigenfaces Projection');
 
 %In accordance with the eigenface algorithm we first subtract off the mean face.
-%We'll keep image_in 2D so that we can use get_residual_svd() below
 size_in=size(image_in);
 mean_back=reshape(mean_back,size_in);
 image_in=image_in-mean_back;
-
-%get_residual_svd() works almost exactly the same way so we'll re-use the code
-% if nargin<=3
-%     [residual,projection] = get_residual_svd(image_in,basis);
-% elseif nargin==4
-%     [residual,projection] = get_residual_svd(image_in,basis,back_region);
-% end
-% 
-%Projection method mentioned in paper (replaced by get_residual_svd() above)
-% if nargin<3
-%     [n_rows, n_cols] = size(image_in);
-%     back_region=ones(n_rows,n_cols);
-% end
-% 
-% %Do projection and subtract the pojection from the image
-% used_region=back_region.*image_in;
-% 
-% used_region=used_region(:);
-% 
-% n_vectors=size(basis,2);
-% projection=zeros(size(basis,1),1); %preallocate
-% for k=1:n_vectors
-%     u_i=basis(:,k);
-%     projection=projection + (u_i'*used_region)*u_i;
-% end
-% residual=image_in(:)-projection;
 
 %Same projection as in get_residual_svd()
 used_region=back_region.*image_in;
