@@ -58,6 +58,9 @@ if nargin<4
     fig=figure();
 end
 
+%Make the correct figure active
+figure(fig);
+
 %Unpack limits
 row_min=limits(1);
 row_max=limits(2);
