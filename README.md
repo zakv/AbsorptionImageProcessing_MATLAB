@@ -16,7 +16,7 @@ To get started, first download the code and add the folder of functions to Matla
 
 With these preliminaries done, the quickest way to learn to use this code is probably by example.  Here is a typical usage.
 
-We have a folder named "20170405" full of data from absorption imaging.  All the background image files end with "\_back.ascii" and we'd like to use all of them to form a basis.  The atoms in all of the images are contained in rows 40 to 60 and columns 50 to 80 of the image; the rest of the image will be assumed to be free of atoms by the algorithm.  We use the code provided here to make a basis for the subspace of background images, use it to reconstruct and subtract the background from a raw image "Cool100d100d80PGCZ4.4\_1\_raw.ascii".  We then plot the results.
+We have a folder named "20170405" full of data from absorption imaging.  All the background image files end with "\_back.ascii" and we'd like to use all of them to form a basis.  The atoms in all of the images are contained in rows 40 to 60 and columns 50 to 80 of the image; the rest of the image will be assumed to be free of atoms by the algorithm.  We use the code provided here to make a basis for the subspace of background images, use it to reconstruct and subtract the background from a raw image "Cool100d100d80PGCZ4.4\_1\_raw.ascii".  We then plot the results.  Then we'll analyze a whole series of similar images, average the results, and then plot them as well.
 
 ```matlab
 >> %Get the image we'd like to analyze
@@ -29,7 +29,7 @@ We have a folder named "20170405" full of data from absorption imaging.  All the
 >> 
 >> %Make a basis
 >> max_vectors = 20; %20 is typically a good number for this
->> ls_pattern = fullfile('20170405','\*_back.ascii');
+>> ls_pattern = fullfile('20170405','*_back.ascii');
 >> file_list = get_file_list(ls_pattern);
 >> [basis_eig, mean_back] = make_basis_eig(file_list,back_region,max_vectors);
 >> 
@@ -38,7 +38,17 @@ We have a folder named "20170405" full of data from absorption imaging.  All the
 >> 
 >> %Plot the results
 >> plot_image(image_in,['Original ',filename]);
->> plot_image(OD_eig,'Eigenfaces Optical Depth');
+>> plot_image(OD_eig,'Eigenfaces Optical Depth: Single Image');
+>> limits = [row_min,row_max,col_min,col_max];
+>> fig=plot_cross_sections(OD_eig,'Single Image',limits);
+>> 
+>> %Now let's do this for many similar images and average the results
+>> series_name = fullfile('20170405','Cool100d100d80PGCZ4.4_*_raw.ascii');
+>> OD_eig = process_series_eig(series_name,basis_eig,mean_back,back_region);
+>> 
+>> %Plot the averaged results
+>> plot_image(OD_eig,'Eigenfaces Optical Depth: Averaged Image');
+>> plot_cross_sections(OD_eig,'Averaged Image',limits,fig);
 ```
 
 To understand what is going on behind the scenes in this example, read the subsequent sections of the README and/or the docstrings of the functions themselves.
@@ -82,12 +92,9 @@ I'm sure I'm not the first person to run into this problem so there are probably
 
 # TODO:
 - [ ] I think load\_image() assumes the image is 121-by-121 right now.  It shouldn't be hard to generalize it.
-- [ ] Make process\_series\_\*() more general.  Maybe let it generate a file list from a filename\_pattern
-- [ ] Add process\_series\_eig() to quick start section
 - [ ] Prove eigenfaces are the eigenvectors with the largest eigenvalues
 
 ## To Maybe Do:
-- [ ] Modify load\_image to call a user-supplied function to read the hard drive.  Expect the returned image to have the noise image subtracted
 - [ ] Make object-oriented image processor class, so that the constructed basis, image size, etc. don't need to be passed around to each function.
 - [ ] Ditch the svd algorithm completely
 - [ ] Include a sample data set for testing.  Update docstring examples to use the sample data.

@@ -2,8 +2,9 @@ function [ atom_OD_eig ] = process_series_eig(series_name, basis_eig, mean_back,
 %Averages the images in the given series and removes the background using
 %the eigenfaces algorithm.
 %   === Inputs ===
-%   series_name should be the path and name of the series of images for one
-%   sequence without '_1_raw.ascii' or any ending like that.
+%   series_name should be a string giving a pattern to match all the images
+%   of one series of images.  This typically involves using the '*'
+%   wildcard.
 %
 %   basis_eig should be a basis array made by make_basis_eig().
 %
@@ -20,15 +21,8 @@ function [ atom_OD_eig ] = process_series_eig(series_name, basis_eig, mean_back,
 %   === Outputs ===
 %   atom_OD_eig is a 2D array of the optical depth of the atoms with the
 %   background removed.  It is the result of averaging all the data in the
-%   series and removing the background using the eigenfaces algorithm.
-%
-%   === Notes ===
-%   This function is intended to be used to average the results of many
-%   different runs of the same experimental sequence.  It assumes that all
-%   the images are save with the series name followed by '_*_raw.ascii'
-%   where '*' can be anything, typically an index of the particular shot.
-%   This may change in future versions if it is helpful to make the code
-%   more naming-convention-independent.
+%   series of images and removing the background using the eigenfaces
+%   algorithm.
 %
 %   === Example Usage ===
 %   >> %Get an image we'd like to analyze
@@ -47,7 +41,7 @@ function [ atom_OD_eig ] = process_series_eig(series_name, basis_eig, mean_back,
 %   >> [basis_eig, mean_back] = make_basis_eig(file_list,back_region,max_vectors);
 %   >> 
 %   >> %Average and analyze the series of images
-%   >> series_name = fullfile('20170405','Cool100d100d80PGCZ4.4');
+%   >> series_name = fullfile('20170405','Cool100d100d80PGCZ4.4_*_raw.ascii');
 %   >> OD_eig = process_series_eig(series_name,basis_eig,mean_back,back_region);
 %   >> 
 %   >> %Plot the results
@@ -56,8 +50,7 @@ function [ atom_OD_eig ] = process_series_eig(series_name, basis_eig, mean_back,
 %   >> plot_cross_sections(OD_eig,'Eigenfaces Result',limits);
 
 %Get a list of filenames for the series
-atom_filename_pattern=[series_name,'_*_raw.ascii'];
-atom_file_list=get_file_list(atom_filename_pattern);
+atom_file_list=get_file_list(series_name);
 
 %Now let's average all the images (you get pretty much the same results by
 %doing the projection after averaging as when you do the projections before
