@@ -12,7 +12,9 @@ Experimentally we've seen that the two techniques give very similar images to ea
 
 ## Quick Start
 
-The quickest way to learn to use this code is probably by example.  Here is a typical usage.
+To get started, first download the code and add the folder of functions to Matlab's path with addpath().  Next, open the file load\_image.m in the AbsorptionImageProcessing folder.  Inside that file is a local function called read\_image\_from\_drive().  Replace the code in that subfunction with your own code to read image data from the hard drive.  Your read\_image\_from\_drive() should take the file name and return the image as a 2D array.  It's likely you can generate the code with Matlab's Import Tool rather than writing it yourself.  If you'd like to subtract "noise" images from your data, do it here.
+
+With these preliminaries done, the quickest way to learn to use this code is probably by example.  Here is a typical usage.
 
 We have a folder named "20170405" full of data from absorption imaging.  All the background image files end with "\_back.ascii" and we'd like to use all of them to form a basis.  The atoms in all of the images are contained in rows 40 to 60 and columns 50 to 80 of the image; the rest of the image will be assumed to be free of atoms by the algorithm.  We use the code provided here to make a basis for the subspace of background images, use it to reconstruct and subtract the background from a raw image "Cool100d100d80PGCZ4.4\_1\_raw.ascii".  We then plot the results.
 
