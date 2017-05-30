@@ -104,4 +104,5 @@ I'm sure I'm not the first person to run into this problem so there are probably
 
 # References
 
-Xiaolin Li, Min Ke, Bo Yan, and Yuzhu Wang, "Reduction of interference fringes in absorption imaging of cold atom cloud using eigenface method," Chin. Opt. Lett. 5, 128-130 (2007)
+* Xiaolin Li, Min Ke, Bo Yan, and Yuzhu Wang, "Reduction of interference fringes in absorption imaging of cold atom cloud using eigenface method," Chin. Opt. Lett. 5, 128-130 (2007)
+* Matthew Turk and Alex Pentland. 1991. Eigenfaces for recognition. J. Cognitive Neuroscience 3, 1 (January 1991), 71-86. DOI=http://dx.doi.org/10.1162/jocn.1991.3.1.71
