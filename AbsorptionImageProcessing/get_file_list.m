@@ -23,25 +23,20 @@ function [ file_list ] = get_file_list( ls_pattern )
 %     %Windows code
 %     file_list=ls(ls_pattern);
 % end
-if isunix()  || ispc()
+if verLessThan('matlab','9.1')
+    %dir() worked differently before matlab 9.1 (2016b)
+    %Therefore, for the camera computer we need different code
+    %This work-around is ok enough, but has issues.  It doesn't handle
+    %wildcards for directories well for example.
+    [~,file_structs,~]=fileattrib(ls_pattern);
+    file_list={file_structs.Name}';
+elseif isunix()  || ispc()
+    %More robust code that only works on Matlab 2016b and later
     temp=dir(ls_pattern); %cells of objects, one object for each file
     k_max=size(temp,1); %k_max= number of files
     file_list=cell(k_max,1);
     for k=1:k_max
         file_list{k}=fullfile(temp(k).folder,temp(k).name);
     end
-    %     %"ls" section for linux compatability
-    %     temp=dir(ls_pattern); %cells of objects, one object for each file
-    %     k_max=size(temp,1); %k_max= number of files
-    %     longest_length=0; %Need to figure out longest filename's length
-    %     for k=1:k_max
-    %         longest_length=max(longest_length,size(temp(k).name,2));
-    %     end
-    %     file_list=zeros(k_max,longest_length);
-    %     for k=1:k_max
-    %         name_length=size(temp(k).name,2);
-    %         file_list(k,1:name_length)=temp(k).name;
-    %     end
-    %     file_list=char(file_list); %This should be the same thing as "ls" returns on windows
 end
 end
