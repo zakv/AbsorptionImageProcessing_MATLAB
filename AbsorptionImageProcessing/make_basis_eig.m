@@ -1,4 +1,4 @@
-function [ basis, mean_back, eigenvalues ] = make_basis_eig( file_list, back_region, max_vectors, show_progress )
+function [ basis, mean_back, eigenvalues ] = make_basis_eig( file_list, back_region, max_vectors, image_size, show_progress )
 %Given a list of filenames opens the files and forms an eigenfaces basis from the data
 %   === Inputs ===
 %   file_list should be a linear cell array with a filename in each cell.
@@ -14,9 +14,21 @@ function [ basis, mean_back, eigenvalues ] = make_basis_eig( file_list, back_reg
 %   max_vectors (optional) is the maximum number of basis vectors to make.
 %   Less may be used if file_list has less files.
 %
-%   show_progress (optional) and should be true or false.  If true, a
-%   window will pop up displaying the progress of loading the images from
-%   the hard drive. This defaults to false
+%   image_size (optional) should be a 1D array with two elements (i.e. what
+%   the size() function would return for a 2D array) specifying [n_rows,
+%   n_columns] for the images used to make the basis.  These dimensions
+%   should of course be the same as for the images which will be analyzed
+%   using this basis.  When image_size is provided, images of different
+%   dimensions are ignored when contstructing the basis, which prevents
+%   errors from dimension mismatch.  Therefore, this argument is necessary
+%   if some of the files in file_list may have different dimensions than
+%   others.  When image_size is not provided, no checks are done on the
+%   dimensions of the background images which will lead to errors if they
+%   are not all the same
+%
+%   show_progress (optional) should be true or false.  If true, a window
+%   will pop up displaying the progress of loading the images from the hard
+%   drive. This defaults to false
 %
 %   === Outputs ===
 %   basis is a 2D arary giving an orthonormal basis that is constructed
@@ -109,7 +121,9 @@ if nargin<3
 elseif nargin==3
     images_array=get_images_array(file_list);
 elseif nargin==4
-    images_array=get_images_array(file_list,show_progress);
+    images_array=get_images_array(file_list,image_size);
+elseif nargin==5
+    images_array=get_images_array(file_list,image_size,show_progress);
 end
 
 %Build the A matrix from the paper (but with the atom region masked)
