@@ -6,28 +6,25 @@ function [ file_list ] = get_file_list( ls_pattern )
 %   files.
 %
 %   === Outputs ===
-%   file_list is a linear cell array (a cloumn vector) with a filename in
+%   file_list is a linear cell array (a column vector) with a filename in
 %   each cell.
 %
 %   === Notes ===
-%   This function used to have separate code for windows and unix systems
-%   that made the unix version try to imitate the behavior of "ls" on
-%   windows.  Now both use dir instead
+%   The output of Matlab's dir() function changed slightly in version
+%   2016b, so there is a separate section of code that runs when this
+%   function is used in versions of Matlab that are older than that.
 %
 %   === Example Usage ===
 %   >> ls_pattern = fullfile('20170405','Savefile_4*_back.ascii');
 %   >> file_list = get_file_list(ls_pattern);
 
-% The "ls" function works differently on linux vs windows so we have separate code for each
-% if ispc()
-%     %Windows code
-%     file_list=ls(ls_pattern);
-% end
 if verLessThan('matlab','9.1')
-    %dir() worked differently before matlab 9.1 (2016b)
-    %Therefore, for the camera computer we need different code
-    %This work-around is ok enough, but has issues.  It doesn't handle
-    %wildcards for directories well for example.
+    %dir() worked differently before Matlab 9.1 (2016b).  Unfortunately,
+    %Mathworks stopped making 32 bit versions of Matlab before then, and
+    %our camera code doesn't work on 64 bit Matlab.  Therefore, for the
+    %camera computer we need different code. This work-around is ok enough,
+    %but has issues.  It doesn't handle wildcards for directories well for
+    %example.
     [~,file_structs,~]=fileattrib(ls_pattern);
     file_list={file_structs.Name}';
 elseif isunix()  || ispc()
