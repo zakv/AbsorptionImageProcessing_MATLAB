@@ -52,10 +52,7 @@ function [ atom_OD_svd ] = process_series_svd(series_name, basis_svd, back_regio
 %Get a list of filenames for the series
 atom_file_list=get_file_list(series_name);
 
-%Now let's average all the images (you get pretty much the same results by
-%doing the projection after averaging as when you do the projections before
-%averaging, so we'll do it the faster way)
-raw_mean=get_mean_image(atom_file_list);
-atom_OD_svd=get_OD_svd(raw_mean,basis_svd,back_region);
+%Now send this file list to process_list_svd() and return the result
+atom_OD_svd=process_list_svd(atom_file_list, basis_svd, back_region);
 end
 

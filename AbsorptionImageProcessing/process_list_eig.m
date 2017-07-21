@@ -1,10 +1,9 @@
-function [ atom_OD_eig ] = process_series_eig(series_name, basis_eig, mean_back, back_region)
-%Averages the images in the given series and removes the background using
+function [ atom_OD_eig ] = process_list_eig(atom_file_list, basis_eig, mean_back, back_region)
+%Averages the images in file_list and removes the background using
 %the eigenfaces algorithm.
 %   === Inputs ===
-%   series_name should be a string giving a pattern to match all the images
-%   of one series of images.  This typically involves using the '*'
-%   wildcard.
+%   atom_file_list should be a linear cell array with a filename in each
+%   cell. It is best to get file_list from get_file_list()
 %
 %   basis_eig should be a basis array made by make_basis_eig().
 %
@@ -21,7 +20,7 @@ function [ atom_OD_eig ] = process_series_eig(series_name, basis_eig, mean_back,
 %   === Outputs ===
 %   atom_OD_eig is a 2D array of the optical depth of the atoms with the
 %   background removed.  It is the result of averaging all the data in the
-%   series of images and removing the background using the eigenfaces
+%   images in file_list and removing the background using the eigenfaces
 %   algorithm.
 %
 %   === Example Usage ===
@@ -40,19 +39,20 @@ function [ atom_OD_eig ] = process_series_eig(series_name, basis_eig, mean_back,
 %   >> file_list = get_file_list(ls_pattern);
 %   >> [basis_eig, mean_back] = make_basis_eig(file_list,back_region,max_vectors);
 %   >> 
-%   >> %Average and analyze the series of images
+%   >> %Average and analyze a list of images
 %   >> series_name = fullfile('20170405','Cool100d100d80PGCZ4.4_*_raw.ascii');
-%   >> OD_eig = process_series_eig(series_name,basis_eig,mean_back,back_region);
+%   >> atoms_file_list=get_file_list(series_name);
+%   >> OD_eig = process_list_eig(atoms_file_list,basis_eig,mean_back,back_region);
 %   >> 
 %   >> %Plot the results
 %   >> plot_image(OD_eig,'Eigenfaces Optical Depth');
 %   >> limits = [row_min,row_max,col_min,col_max];
 %   >> plot_cross_sections(OD_eig,'Eigenfaces Result',limits);
 
-%Get a list of filenames for the series
-atom_file_list=get_file_list(series_name);
-
-%Now send this file list to process_list_eig() and return the result
-atom_OD_eig=process_list_eig(atom_file_list, basis_eig, mean_back, back_region);
+%Let's average all the images (you get pretty much the same results by
+%doing the projection after averaging as when you do the projections before
+%averaging, so we'll do it the faster way)
+raw_mean=get_mean_image(atom_file_list);
+atom_OD_eig=get_OD_eig(raw_mean,basis_eig,mean_back,back_region);
 end
 
