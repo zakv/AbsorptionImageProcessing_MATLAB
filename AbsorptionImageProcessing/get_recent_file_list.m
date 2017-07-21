@@ -49,6 +49,6 @@ end
 file_list=file_list(sorting_indices);
 
 %Now let's trim file_list to be at most max_files long
-file_list=file_list( 1:min(end,max_files) ); %Take up to 50 most recent files
+file_list=file_list( 1:min(end,max_files) );
 
 end
