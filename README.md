@@ -91,7 +91,6 @@ I'm sure I'm not the first person to run into this problem so there are probably
 
 
 # TODO:
-- [ ] I think load\_image() assumes the image is 121-by-121 right now.  It shouldn't be hard to generalize it.
 - [ ] Prove eigenfaces are the eigenvectors with the largest eigenvalues
 
 ## To Maybe Do:
