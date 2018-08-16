@@ -68,6 +68,58 @@ end
 end
 
 function image_out = read_image_from_drive(filename)
+%Loads data from the files produced by our camera software
+%   === Inputs ===
+%   filename should be the name of the file with extension.  A relative or
+%   absolute path may also be included in filename.
+%
+%   === Outputs ===
+%   image_out is a 2D array of data from the specified file.
+%
+%   === Notes ===
+%   This function is designed to load in tab-separated csv files that end
+%   in '.ascii' or png files that end in '.png'.
+%
+%   === Example Usage ===
+%   This is a helper function that cannot be called directly.
+
+%Check if the file name ends in '.ascii', and if so call the appropriate
+%subfunction
+[~,~,extension]=fileparts(filename);
+if strcmp(extension,'.ascii')
+    image_out=read_image_from_drive_ascii(filename);
+else
+    image_out=read_image_from_drive_png(filename);
+end
+
+end
+
+function image_out = read_image_from_drive_png(filename)
+%Loads data from a png file produced by our camera software
+%   === Inputs ===
+%   filename should be the name of the file with extension.  A relative or
+%   absolute path may also be included in filename.
+%
+%   === Outputs ===
+%   image_out is a 2D array of data from the specified file.
+%
+%   === Notes ===
+%   This function is designed only for grayscale png images, typically with
+%   16 bit depth. It may work for other formats as well as long as imread
+%   knows how to deal with them, but the images should still be gray scale
+%
+%   === Example Usage ===
+%   This is a helper function that cannot be called directly.
+
+%Call imread to read in the file
+image_out=imread(filename);
+
+%Convert data type to double precision, necessary for calling eigs
+image_out=double(image_out);
+
+end
+
+function image_out = read_image_from_drive_ascii(filename)
 %Loads data from the csv ascii files produced by our camera software
 %   === Inputs ===
 %   filename should be the name of the file with extension.  A relative or
