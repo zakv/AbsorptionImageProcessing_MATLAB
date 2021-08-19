@@ -86,6 +86,8 @@ The way to correct for this is to contruct a basis that is orthonormal over the 
 
 Now we can use that basis appropriately by doing the following.  First, set the atom region of the input image to zero, then calculate its projection onto each basis vector.  Since the atom region of the image is zero, those pixels do not contribute to the inner products in the projections, and so the basis is effectively orthonormal.  Since the basis vectors are *not* zero in the atom region, when we take their sum weighted by their projections, we get the full reconstructed background image even in the atom region.  This is then used with the usual expression OD=log( abs( back./raw ) ) to get the optical depth.
 
+A more complete description of this appraoch is provided in Appendix D of my thesis ("Raman Cooling to High Phase Space Density" by Zachary Vendeiro), available online.
+
 I'm sure I'm not the first person to run into this problem so there are probably technical terms to describe what is done here, either from linear algebra or from image processing.  However I'm not an expert in either of those fields.  I have the feeling that this process can be desribed by a considering setting pixels to zero as acting on the vector with some metric, but I'm not really sure if that's a helpful or even accurate way to see this.  Feel free to email me if you know more and have a better way to interpret this, or maybe edit this file yourself and send a pull request.
 
 
